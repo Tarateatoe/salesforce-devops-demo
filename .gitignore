@@ -1,0 +1,22 @@
+# Salesforce
+.sfdx/
+.sf/
+.localdevserver/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Dependencies
+node_modules/
+
+# Scratch Orgs
+config/
+.husky/
