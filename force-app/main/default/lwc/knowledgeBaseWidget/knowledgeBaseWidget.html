@@ -1,0 +1,32 @@
+<template>
+    <lightning-card title="Knowledge Base" icon-name="standard:knowledge">
+        <div class="slds-p-around_medium">
+            <lightning-input
+                type="search"
+                label="Search Knowledge Base"
+                value={searchTerm}
+                onchange={handleSearchChange}>
+            </lightning-input>
+
+            <lightning-button
+                label="Search"
+                variant="brand"
+                onclick={handleSearch}
+                class="slds-m-top_small">
+            </lightning-button>
+
+            <template if:true={isLoading}>
+                <lightning-spinner
+                    alternative-text="Loading"
+                    size="small">
+                </lightning-spinner>
+            </template>
+
+            <template if:true={hasArticles}>
+                <div class="slds-m-top_medium">
+                    <!-- Article results will be displayed here -->
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
