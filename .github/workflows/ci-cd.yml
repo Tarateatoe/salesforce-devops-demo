@@ -1,0 +1,275 @@
+name: Salesforce CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [main, dev, qa, staging]
+  push:
+    branches: [main, dev, qa, staging]
+  workflow_dispatch:
+
+env:
+  SF_CLI_VERSION: 2.x
+  NODE_VERSION: 20
+
+jobs:
+  validate:
+    name: Validate Metadata
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Salesforce CLI
+        run: |
+          npm install -g @salesforce/cli
+          sf version
+
+      - name: Authenticate to Dev Org
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL_DEV }}
+        run: |
+          echo "${SFDX_AUTH_URL}" > ./authfile
+          sf org login sfdx-url --sfdx-url-file ./authfile --alias ci-dev-org --set-default
+          rm ./authfile
+
+      - name: Run Code Quality Scan
+        run: |
+          sf plugins install @salesforce/sfdx-scanner
+          sf scanner run --target "force-app/**/*.cls,force-app/**/*.trigger" --format table --outfile scan-results.txt || true
+          cat scan-results.txt
+
+      - name: Deploy Metadata (Validation Only)
+        run: |
+          sf project deploy start --dry-run --target-org ci-dev-org --test-level RunLocalTests --verbose
+
+      - name: Upload Scan Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-scan-results
+          path: scan-results.txt
+
+  test:
+    name: Run Apex Tests
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Salesforce CLI
+        run: |
+          npm install -g @salesforce/cli
+          sf version
+
+      - name: Authenticate to Dev Org
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL_DEV }}
+        run: |
+          echo "${SFDX_AUTH_URL}" > ./authfile
+          sf org login sfdx-url --sfdx-url-file ./authfile --alias ci-dev-org --set-default
+          rm ./authfile
+
+      - name: Deploy to Dev Org
+        run: |
+          sf project deploy start --target-org ci-dev-org --wait 30
+
+      - name: Run All Apex Tests
+        run: |
+          sf apex run test --target-org ci-dev-org --test-level RunLocalTests --code-coverage --result-format human --detailed-coverage --wait 10
+
+      - name: Get Test Results
+        if: always()
+        run: |
+          sf apex get test --target-org ci-dev-org --output-dir ./test-results --result-format json
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: apex-test-results
+          path: test-results/
+
+  deploy-qa:
+    name: Deploy to QA
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
+    environment:
+      name: QA
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Salesforce CLI
+        run: |
+          npm install -g @salesforce/cli
+          sf version
+
+      - name: Authenticate to QA Org
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL_QA }}
+        run: |
+          echo "${SFDX_AUTH_URL}" > ./authfile
+          sf org login sfdx-url --sfdx-url-file ./authfile --alias ci-qa-org --set-default
+          rm ./authfile
+
+      - name: Deploy to QA
+        run: |
+          sf project deploy start --target-org ci-qa-org --test-level RunLocalTests --wait 30
+
+      - name: Notify Slack on Success
+        if: success()
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: |
+          PAYLOAD=$(jq -n --arg text "✅ Deployment to QA successful! Branch: ${BRANCH_NAME}" '{"text":$text}')
+          curl -X POST "${SLACK_WEBHOOK}" -H 'Content-Type: application/json' -d "${PAYLOAD}"
+
+      - name: Notify Slack on Failure
+        if: failure()
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: |
+          PAYLOAD=$(jq -n --arg text "❌ Deployment to QA failed! Branch: ${BRANCH_NAME}" '{"text":$text}')
+          curl -X POST "${SLACK_WEBHOOK}" -H 'Content-Type: application/json' -d "${PAYLOAD}"
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/qa' && github.event_name == 'push'
+    environment:
+      name: Staging
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Salesforce CLI
+        run: |
+          npm install -g @salesforce/cli
+          sf version
+
+      - name: Authenticate to Staging Org
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL_STAGING }}
+        run: |
+          echo "${SFDX_AUTH_URL}" > ./authfile
+          sf org login sfdx-url --sfdx-url-file ./authfile --alias ci-staging-org --set-default
+          rm ./authfile
+
+      - name: Deploy to Staging
+        run: |
+          sf project deploy start --target-org ci-staging-org --test-level RunLocalTests --wait 30
+
+      - name: Notify Slack
+        if: always()
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          if [ "${JOB_STATUS}" == "success" ]; then
+            MESSAGE="✅ Staging deployment successful!"
+          else
+            MESSAGE="❌ Staging deployment failed!"
+          fi
+          PAYLOAD=$(jq -n --arg text "${MESSAGE}" '{"text":$text}')
+          curl -X POST "${SLACK_WEBHOOK}" -H 'Content-Type: application/json' -d "${PAYLOAD}"
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: Production
+      url: https://your-production-org.my.salesforce.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Salesforce CLI
+        run: |
+          npm install -g @salesforce/cli
+          sf version
+
+      - name: Authenticate to Production Org
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL_PROD }}
+        run: |
+          echo "${SFDX_AUTH_URL}" > ./authfile
+          sf org login sfdx-url --sfdx-url-file ./authfile --alias ci-prod-org --set-default
+          rm ./authfile
+
+      - name: Backup Production Metadata
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          sf project retrieve start --target-org ci-prod-org --output-dir "./backup-${COMMIT_SHA}"
+
+      - name: Deploy to Production (Validation First)
+        run: |
+          sf project deploy start --dry-run --target-org ci-prod-org --test-level RunLocalTests --wait 30
+
+      - name: Deploy to Production (Actual)
+        run: |
+          sf project deploy start --target-org ci-prod-org --test-level RunLocalTests --wait 30
+
+      - name: Run Smoke Tests
+        run: |
+          sf apex run test --target-org ci-prod-org --tests PortalPriorityTest,LeadScoringTest,RiskAssessmentTest --result-format human --code-coverage
+
+      - name: Create Release Tag
+        if: success()
+        env:
+          RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git tag -a "release-${RUN_NUMBER}" -m "Production Release ${RUN_NUMBER}"
+          git push origin "release-${RUN_NUMBER}"
+
+      - name: Notify Slack - Production Deployment
+        if: always()
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          JOB_STATUS: ${{ job.status }}
+          RUN_NUMBER: ${{ github.run_number }}
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          if [ "${JOB_STATUS}" == "success" ]; then
+            MESSAGE="🚀 PRODUCTION DEPLOYMENT SUCCESSFUL! Release: ${RUN_NUMBER} | Commit: ${COMMIT_SHA}"
+          else
+            MESSAGE="🚨 PRODUCTION DEPLOYMENT FAILED! Release: ${RUN_NUMBER} | Commit: ${COMMIT_SHA} | @channel"
+          fi
+          PAYLOAD=$(jq -n --arg text "${MESSAGE}" '{"text":$text}')
+          curl -X POST "${SLACK_WEBHOOK}" -H 'Content-Type: application/json' -d "${PAYLOAD}"
