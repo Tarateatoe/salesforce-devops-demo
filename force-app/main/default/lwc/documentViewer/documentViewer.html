@@ -1,0 +1,36 @@
+<template>
+    <div class="document-viewer slds-box slds-p-around_medium">
+        <div class="document-header slds-m-bottom_medium">
+            <h2 class="slds-text-heading_large">{title}</h2>
+            <p class="slds-text-color_weak slds-m-top_x-small">{description}</p>
+        </div>
+
+        <div class="document-actions slds-m-bottom_medium">
+            <lightning-button-group>
+                <lightning-button
+                    label="Print"
+                    icon-name="utility:print"
+                    onclick={handlePrint}>
+                </lightning-button>
+                <lightning-button
+                    label="Download Markdown"
+                    icon-name="utility:download"
+                    onclick={handleDownload}>
+                </lightning-button>
+                <lightning-button
+                    label="View on GitHub"
+                    icon-name="utility:new_window"
+                    onclick={handleGitHub}>
+                </lightning-button>
+            </lightning-button-group>
+        </div>
+
+        <div class="document-content slds-box slds-theme_shade slds-p-around_large">
+            <slot></slot>
+        </div>
+
+        <div class="document-footer slds-m-top_medium slds-text-align_center slds-text-color_weak">
+            <p>Created: {createdDate} | Last Updated: {lastUpdated}</p>
+        </div>
+    </div>
+</template>

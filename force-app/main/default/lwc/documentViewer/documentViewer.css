@@ -1,0 +1,32 @@
+.document-viewer {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.document-header h2 {
+    color: #080707;
+}
+
+.document-content {
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.document-content ::slotted(*) {
+    max-width: 100%;
+}
+
+.document-footer {
+    font-size: 12px;
+}
+
+@media print {
+    .document-actions {
+        display: none;
+    }
+
+    .document-content {
+        box-shadow: none;
+        border: none;
+    }
+}

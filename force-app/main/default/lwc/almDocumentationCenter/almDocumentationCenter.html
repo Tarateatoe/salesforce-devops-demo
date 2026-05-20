@@ -1,0 +1,204 @@
+<template>
+    <lightning-card title="ALM Documentation Center" icon-name="standard:document">
+        <div class="slds-p-around_medium">
+            <!-- Navigation Tabs -->
+            <lightning-tabset variant="scoped" active-tab-value={activeTab}>
+                <lightning-tab label="Overview" value="overview" onactive={handleTabChange}>
+                    <div class="slds-p-around_medium">
+                        <h2 class="slds-text-heading_medium slds-m-bottom_medium">
+                            Application Lifecycle Management Demo
+                        </h2>
+                        <p class="slds-m-bottom_medium">
+                            Welcome to the complete ALM documentation center. This demo showcases
+                            enterprise-grade DevOps practices for Salesforce.
+                        </p>
+
+                        <lightning-layout multiple-rows>
+                            <lightning-layout-item size="12" medium-device-size="6" padding="around-small">
+                                <lightning-tile label="DevOps Center" href="#" class="slds-box">
+                                    <p class="slds-truncate">
+                                        <lightning-icon icon-name="standard:branch_merge" size="small" class="slds-m-right_small"></lightning-icon>
+                                        12 work items across pipeline stages
+                                    </p>
+                                </lightning-tile>
+                            </lightning-layout-item>
+
+                            <lightning-layout-item size="12" medium-device-size="6" padding="around-small">
+                                <lightning-tile label="Automated Testing" href="#" class="slds-box">
+                                    <p class="slds-truncate">
+                                        <lightning-icon icon-name="standard:apex" size="small" class="slds-m-right_small"></lightning-icon>
+                                        25+ test methods with 100% coverage
+                                    </p>
+                                </lightning-tile>
+                            </lightning-layout-item>
+
+                            <lightning-layout-item size="12" medium-device-size="6" padding="around-small">
+                                <lightning-tile label="CI/CD Pipeline" href="#" class="slds-box">
+                                    <p class="slds-truncate">
+                                        <lightning-icon icon-name="standard:process" size="small" class="slds-m-right_small"></lightning-icon>
+                                        GitHub Actions workflow automation
+                                    </p>
+                                </lightning-tile>
+                            </lightning-layout-item>
+
+                            <lightning-layout-item size="12" medium-device-size="6" padding="around-small">
+                                <lightning-tile label="Feature Flags" href="#" class="slds-box">
+                                    <p class="slds-truncate">
+                                        <lightning-icon icon-name="standard:settings" size="small" class="slds-m-right_small"></lightning-icon>
+                                        Controlled rollouts without deployment
+                                    </p>
+                                </lightning-tile>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </div>
+                </lightning-tab>
+
+                <lightning-tab label="Complete Guide" value="guide" onactive={handleTabChange}>
+                    <div class="slds-p-around_medium">
+                        <h2 class="slds-text-heading_medium slds-m-bottom_medium">
+                            ALM Complete Guide
+                        </h2>
+                        <p class="slds-m-bottom_medium">
+                            Comprehensive documentation covering all aspects of the ALM demo.
+                        </p>
+
+                        <lightning-button
+                            variant="brand"
+                            label="Download Complete Guide PDF"
+                            icon-name="utility:download"
+                            onclick={downloadCompleteGuide}
+                            class="slds-m-bottom_medium">
+                        </lightning-button>
+
+                        <div class="doc-content slds-box slds-p-around_medium">
+                            <lightning-formatted-rich-text value={guideContent}></lightning-formatted-rich-text>
+                        </div>
+                    </div>
+                </lightning-tab>
+
+                <lightning-tab label="Deployment Runbook" value="runbook" onactive={handleTabChange}>
+                    <div class="slds-p-around_medium">
+                        <h2 class="slds-text-heading_medium slds-m-bottom_medium">
+                            Deployment Runbook
+                        </h2>
+                        <p class="slds-m-bottom_medium">
+                            Step-by-step procedures for deploying changes through the pipeline.
+                        </p>
+
+                        <lightning-button
+                            variant="brand"
+                            label="Download Runbook PDF"
+                            icon-name="utility:download"
+                            onclick={downloadRunbook}
+                            class="slds-m-bottom_medium">
+                        </lightning-button>
+
+                        <div class="doc-content slds-box slds-p-around_medium">
+                            <lightning-formatted-rich-text value={runbookContent}></lightning-formatted-rich-text>
+                        </div>
+                    </div>
+                </lightning-tab>
+
+                <lightning-tab label="Quick Start" value="quickstart" onactive={handleTabChange}>
+                    <div class="slds-p-around_medium">
+                        <h2 class="slds-text-heading_medium slds-m-bottom_medium">
+                            Quick Start Guide
+                        </h2>
+
+                        <div class="slds-box slds-p-around_medium slds-m-bottom_medium">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small">
+                                <lightning-icon icon-name="utility:check" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                                Setup Complete
+                            </h3>
+                            <ul class="slds-list_dotted">
+                                <li>✅ DevOps Center configured with 4 projects</li>
+                                <li>✅ 12 work items distributed across pipeline stages</li>
+                                <li>✅ Test classes deployed with 100% coverage</li>
+                                <li>✅ CI/CD pipeline configured in GitHub Actions</li>
+                                <li>✅ Feature flags ready for controlled rollouts</li>
+                            </ul>
+                        </div>
+
+                        <div class="slds-box slds-p-around_medium slds-m-bottom_medium">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small">
+                                Demo Flow (35 minutes)
+                            </h3>
+                            <ol class="slds-list_ordered">
+                                <li class="slds-m-bottom_small"><strong>DevOps Center (5 min)</strong> - Show pipeline, work items, Git integration</li>
+                                <li class="slds-m-bottom_small"><strong>Automated Testing (5 min)</strong> - Run tests, show coverage</li>
+                                <li class="slds-m-bottom_small"><strong>CI/CD Pipeline (7 min)</strong> - GitHub Actions workflow</li>
+                                <li class="slds-m-bottom_small"><strong>Feature Flags (5 min)</strong> - Canary releases demo</li>
+                                <li class="slds-m-bottom_small"><strong>Code Quality (3 min)</strong> - SFDX Scanner</li>
+                                <li class="slds-m-bottom_small"><strong>Monitoring (5 min)</strong> - Audit trail, deployment history</li>
+                                <li class="slds-m-bottom_small"><strong>Q&A (5 min)</strong> - Answer questions</li>
+                            </ol>
+                        </div>
+
+                        <div class="slds-box slds-p-around_medium">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small">
+                                Quick Commands
+                            </h3>
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+                                    <code class="slds-box slds-p-around_x-small">
+                                        sf apex run test --target-org fy27data360demots --test-level RunLocalTests --code-coverage
+                                    </code>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+                                    <code class="slds-box slds-p-around_x-small">
+                                        sf scanner run --target "force-app/**/*.cls" --format table
+                                    </code>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1">
+                                    <code class="slds-box slds-p-around_x-small">
+                                        sf data query --query "SELECT Name, Subject, Status FROM WorkItem" --target-org fy27data360demots
+                                    </code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </lightning-tab>
+
+                <lightning-tab label="Resources" value="resources" onactive={handleTabChange}>
+                    <div class="slds-p-around_medium">
+                        <h2 class="slds-text-heading_medium slds-m-bottom_medium">
+                            External Resources
+                        </h2>
+
+                        <div class="slds-box slds-p-around_medium slds-m-bottom_medium">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small">GitHub Repository</h3>
+                            <p class="slds-m-bottom_small">
+                                <lightning-icon icon-name="standard:code_set" size="small" class="slds-m-right_small"></lightning-icon>
+                                All source code, test classes, and CI/CD configuration
+                            </p>
+                            <lightning-button
+                                variant="brand"
+                                label="Open GitHub Repository"
+                                icon-name="utility:new_window"
+                                onclick={openGitHub}>
+                            </lightning-button>
+                        </div>
+
+                        <div class="slds-box slds-p-around_medium slds-m-bottom_medium">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small">Trailhead Modules</h3>
+                            <ul class="slds-list_dotted">
+                                <li><a href="https://trailhead.salesforce.com/content/learn/modules/application-lifecycle-and-development-models" target="_blank">Application Lifecycle and Development Models</a></li>
+                                <li><a href="https://trailhead.salesforce.com/content/learn/modules/sfdx_dev_model" target="_blank">Salesforce DX Development Model</a></li>
+                                <li><a href="https://trailhead.salesforce.com/content/learn/modules/source-driven-development" target="_blank">Source-Driven Development</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="slds-box slds-p-around_medium">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small">Tools & Documentation</h3>
+                            <ul class="slds-list_dotted">
+                                <li><a href="https://developer.salesforce.com/docs/atlas.en-us.248.0.dev_center_guide.meta/dev_center_guide" target="_blank">DevOps Center Documentation</a></li>
+                                <li><a href="https://github.com/marketplace?type=actions&query=salesforce" target="_blank">GitHub Actions for Salesforce</a></li>
+                                <li><a href="https://forcedotcom.github.io/sfdx-scanner/" target="_blank">SFDX Scanner Documentation</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </lightning-tab>
+            </lightning-tabset>
+        </div>
+    </lightning-card>
+</template>
