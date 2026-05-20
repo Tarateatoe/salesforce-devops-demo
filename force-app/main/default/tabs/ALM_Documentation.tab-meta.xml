@@ -3,5 +3,5 @@
     <description>ALM Documentation Center - Complete guide for Application Lifecycle Management demo</description>
     <label>ALM Documentation</label>
     <motif>Custom48: Gears</motif>
-    <lwcComponent>c:almDocumentationCenter</lwcComponent>
+    <lwcComponent>c__almDocumentationCenter</lwcComponent>
 </CustomTab>
