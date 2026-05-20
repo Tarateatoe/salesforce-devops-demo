@@ -13,10 +13,6 @@
     <masterLabel>ALM Home Page</masterLabel>
     <template>
         <name>home:desktopTemplate</name>
-        <properties>
-            <name>enablePageActionDropDown</name>
-            <value>true</value>
-        </properties>
     </template>
     <type>HomePage</type>
 </FlexiPage>

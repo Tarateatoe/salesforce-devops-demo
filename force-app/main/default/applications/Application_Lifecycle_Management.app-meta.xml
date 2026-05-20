@@ -22,5 +22,4 @@
     <tabs>standard-DevopsPipeline</tabs>
     <tabs>standard-report</tabs>
     <uiType>Lightning</uiType>
-    <utilityBar>Application_Lifecycle_Management_UtilityBar</utilityBar>
 </CustomApplication>
