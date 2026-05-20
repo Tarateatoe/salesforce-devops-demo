@@ -1,0 +1,40 @@
+SSO Authentication Implementation Guide
+=======================================
+
+This document outlines the Single Sign-On (SSO) implementation for Auth0 and Okta integration.
+
+## Auth0 Integration
+
+Configuration Steps:
+1. Create Auth0 application in Auth0 dashboard
+2. Configure callback URLs for Salesforce domains
+3. Set up Auth Provider in Salesforce Setup
+4. Configure My Domain settings
+5. Test authentication flow
+
+## Okta Integration
+
+Configuration Steps:
+1. Create SAML 2.0 application in Okta
+2. Download IdP metadata
+3. Configure Salesforce as Service Provider
+4. Enable Just-In-Time (JIT) provisioning
+5. Test SSO login
+
+## Security Considerations
+
+- Enable MFA for all SSO providers
+- Configure session timeout policies
+- Implement IP restrictions where applicable
+- Monitor authentication logs
+- Set up alerts for failed login attempts
+
+## Testing Checklist
+
+- [ ] Auth0 login successful
+- [ ] Okta login successful
+- [ ] JIT provisioning creates users correctly
+- [ ] MFA challenges working
+- [ ] Session timeout enforced
+- [ ] Logout redirects properly
+
