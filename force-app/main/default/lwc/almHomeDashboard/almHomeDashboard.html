@@ -1,0 +1,314 @@
+<template>
+    <div class="alm-home-dashboard">
+        <!-- Hero Section -->
+        <div class="hero-section slds-box slds-theme_shade slds-m-bottom_medium">
+            <div class="slds-grid slds-wrap slds-p-around_large">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+                    <h1 class="slds-text-heading_large slds-m-bottom_small">
+                        <lightning-icon icon-name="standard:flow" size="large" class="slds-m-right_small"></lightning-icon>
+                        Application Lifecycle Management
+                    </h1>
+                    <p class="slds-text-body_regular slds-text-color_weak slds-m-bottom_medium">
+                        Complete DevOps demo showcasing enterprise-grade practices for Salesforce development
+                    </p>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col">
+                            <lightning-button
+                                variant="brand"
+                                label="View Documentation"
+                                icon-name="utility:open_folder"
+                                onclick={navigateToDocumentation}>
+                            </lightning-button>
+                        </div>
+                        <div class="slds-col">
+                            <lightning-button
+                                variant="neutral"
+                                label="Open GitHub"
+                                icon-name="utility:new_window"
+                                onclick={openGitHub}>
+                            </lightning-button>
+                        </div>
+                        <div class="slds-col">
+                            <lightning-button
+                                variant="neutral"
+                                label="Run Tests"
+                                icon-name="utility:play"
+                                onclick={navigateToTests}>
+                            </lightning-button>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <div class="stats-card slds-box slds-theme_default slds-p-around_medium">
+                        <h3 class="slds-text-heading_small slds-m-bottom_small">Quick Stats</h3>
+                        <ul class="slds-list_vertical slds-has-dividers_top-space">
+                            <li class="slds-item slds-p-top_small">
+                                <div class="slds-grid">
+                                    <div class="slds-col">
+                                        <lightning-icon icon-name="utility:rows" size="x-small"></lightning-icon>
+                                        Work Items
+                                    </div>
+                                    <div class="slds-col_bump-left">
+                                        <strong>12</strong>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="slds-item slds-p-top_small">
+                                <div class="slds-grid">
+                                    <div class="slds-col">
+                                        <lightning-icon icon-name="utility:check" size="x-small"></lightning-icon>
+                                        Test Coverage
+                                    </div>
+                                    <div class="slds-col_bump-left">
+                                        <strong>100%</strong>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="slds-item slds-p-top_small">
+                                <div class="slds-grid">
+                                    <div class="slds-col">
+                                        <lightning-icon icon-name="utility:layers" size="x-small"></lightning-icon>
+                                        Pipeline Stages
+                                    </div>
+                                    <div class="slds-col_bump-left">
+                                        <strong>3</strong>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Features Grid -->
+        <div class="features-grid slds-m-bottom_medium">
+            <h2 class="slds-text-heading_medium slds-m-bottom_small">Key Features</h2>
+            <lightning-layout multiple-rows>
+                <!-- DevOps Center -->
+                <lightning-layout-item size="12" medium-device-size="6" large-device-size="3" padding="around-small">
+                    <article class="feature-card slds-card slds-card_boundary">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__figure">
+                                    <lightning-icon icon-name="standard:branch_merge" alternative-text="DevOps Center"></lightning-icon>
+                                </div>
+                                <div class="slds-media__body">
+                                    <h2 class="slds-card__header-title">
+                                        <span>DevOps Center</span>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                        <div class="slds-card__body slds-card__body_inner">
+                            <p>Source-driven development with Git integration and pipeline management</p>
+                            <ul class="slds-list_dotted slds-m-top_small">
+                                <li>12 work items</li>
+                                <li>3 pipeline stages</li>
+                                <li>4 active projects</li>
+                            </ul>
+                        </div>
+                        <footer class="slds-card__footer">
+                            <lightning-button
+                                variant="neutral"
+                                label="View Pipeline"
+                                class="slds-button_stretch"
+                                onclick={navigateToPipeline}>
+                            </lightning-button>
+                        </footer>
+                    </article>
+                </lightning-layout-item>
+
+                <!-- Automated Testing -->
+                <lightning-layout-item size="12" medium-device-size="6" large-device-size="3" padding="around-small">
+                    <article class="feature-card slds-card slds-card_boundary">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__figure">
+                                    <lightning-icon icon-name="standard:apex" alternative-text="Testing"></lightning-icon>
+                                </div>
+                                <div class="slds-media__body">
+                                    <h2 class="slds-card__header-title">
+                                        <span>Automated Testing</span>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                        <div class="slds-card__body slds-card__body_inner">
+                            <p>Comprehensive test coverage with quality gates enforced</p>
+                            <ul class="slds-list_dotted slds-m-top_small">
+                                <li>4 test classes</li>
+                                <li>25+ test methods</li>
+                                <li>100% code coverage</li>
+                            </ul>
+                        </div>
+                        <footer class="slds-card__footer">
+                            <lightning-button
+                                variant="neutral"
+                                label="View Tests"
+                                class="slds-button_stretch"
+                                onclick={navigateToTests}>
+                            </lightning-button>
+                        </footer>
+                    </article>
+                </lightning-layout-item>
+
+                <!-- CI/CD Pipeline -->
+                <lightning-layout-item size="12" medium-device-size="6" large-device-size="3" padding="around-small">
+                    <article class="feature-card slds-card slds-card_boundary">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__figure">
+                                    <lightning-icon icon-name="standard:process" alternative-text="CI/CD"></lightning-icon>
+                                </div>
+                                <div class="slds-media__body">
+                                    <h2 class="slds-card__header-title">
+                                        <span>CI/CD Pipeline</span>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                        <div class="slds-card__body slds-card__body_inner">
+                            <p>GitHub Actions workflow for automated deployments</p>
+                            <ul class="slds-list_dotted slds-m-top_small">
+                                <li>5-stage pipeline</li>
+                                <li>Code quality scans</li>
+                                <li>Slack notifications</li>
+                            </ul>
+                        </div>
+                        <footer class="slds-card__footer">
+                            <lightning-button
+                                variant="neutral"
+                                label="View Workflow"
+                                class="slds-button_stretch"
+                                onclick={openGitHubActions}>
+                            </lightning-button>
+                        </footer>
+                    </article>
+                </lightning-layout-item>
+
+                <!-- Feature Flags -->
+                <lightning-layout-item size="12" medium-device-size="6" large-device-size="3" padding="around-small">
+                    <article class="feature-card slds-card slds-card_boundary">
+                        <div class="slds-card__header slds-grid">
+                            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                <div class="slds-media__figure">
+                                    <lightning-icon icon-name="standard:settings" alternative-text="Feature Flags"></lightning-icon>
+                                </div>
+                                <div class="slds-media__body">
+                                    <h2 class="slds-card__header-title">
+                                        <span>Feature Flags</span>
+                                    </h2>
+                                </div>
+                            </header>
+                        </div>
+                        <div class="slds-card__body slds-card__body_inner">
+                            <p>Controlled rollouts without code deployment</p>
+                            <ul class="slds-list_dotted slds-m-top_small">
+                                <li>3 active flags</li>
+                                <li>Canary releases</li>
+                                <li>Instant toggle</li>
+                            </ul>
+                        </div>
+                        <footer class="slds-card__footer">
+                            <lightning-button
+                                variant="neutral"
+                                label="Manage Flags"
+                                class="slds-button_stretch"
+                                onclick={navigateToFeatureFlags}>
+                            </lightning-button>
+                        </footer>
+                    </article>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+
+        <!-- Demo Resources -->
+        <div class="resources-section slds-box slds-m-bottom_medium">
+            <h2 class="slds-text-heading_medium slds-m-bottom_small">Demo Resources</h2>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="12" medium-device-size="4" padding="around-small">
+                    <div class="resource-item slds-box slds-box_x-small slds-theme_shade">
+                        <lightning-icon icon-name="doctype:pdf" size="small" class="slds-m-bottom_x-small"></lightning-icon>
+                        <h3 class="slds-text-heading_small">Complete Guide</h3>
+                        <p class="slds-text-body_small slds-m-top_x-small">
+                            30+ pages covering all ALM aspects
+                        </p>
+                        <lightning-button
+                            variant="base"
+                            label="View Guide"
+                            icon-name="utility:open"
+                            class="slds-m-top_small"
+                            onclick={navigateToDocumentation}>
+                        </lightning-button>
+                    </div>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12" medium-device-size="4" padding="around-small">
+                    <div class="resource-item slds-box slds-box_x-small slds-theme_shade">
+                        <lightning-icon icon-name="doctype:xml" size="small" class="slds-m-bottom_x-small"></lightning-icon>
+                        <h3 class="slds-text-heading_small">Deployment Runbook</h3>
+                        <p class="slds-text-body_small slds-m-top_x-small">
+                            Step-by-step deployment procedures
+                        </p>
+                        <lightning-button
+                            variant="base"
+                            label="View Runbook"
+                            icon-name="utility:open"
+                            class="slds-m-top_small"
+                            onclick={navigateToDocumentation}>
+                        </lightning-button>
+                    </div>
+                </lightning-layout-item>
+
+                <lightning-layout-item size="12" medium-device-size="4" padding="around-small">
+                    <div class="resource-item slds-box slds-box_x-small slds-theme_shade">
+                        <lightning-icon icon-name="standard:code_set" size="small" class="slds-m-bottom_x-small"></lightning-icon>
+                        <h3 class="slds-text-heading_small">GitHub Repository</h3>
+                        <p class="slds-text-body_small slds-m-top_x-small">
+                            Source code and CI/CD workflows
+                        </p>
+                        <lightning-button
+                            variant="base"
+                            label="Open GitHub"
+                            icon-name="utility:new_window"
+                            class="slds-m-top_small"
+                            onclick={openGitHub}>
+                        </lightning-button>
+                    </div>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+
+        <!-- Quick Commands -->
+        <div class="commands-section slds-box">
+            <h2 class="slds-text-heading_medium slds-m-bottom_small">Quick Commands</h2>
+            <div class="slds-grid slds-wrap slds-gutters_small">
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="command-block slds-box slds-theme_shade slds-p-around_small">
+                        <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_x-small">Run all tests:</p>
+                        <code class="slds-box slds-p-around_x-small slds-theme_default">
+                            sf apex run test --target-org fy27data360demots --test-level RunLocalTests --code-coverage
+                        </code>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="command-block slds-box slds-theme_shade slds-p-around_small">
+                        <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_x-small">Code quality scan:</p>
+                        <code class="slds-box slds-p-around_x-small slds-theme_default">
+                            sf scanner run --target "force-app/**/*.cls" --format table
+                        </code>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="command-block slds-box slds-theme_shade slds-p-around_small">
+                        <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_x-small">Query work items:</p>
+                        <code class="slds-box slds-p-around_x-small slds-theme_default">
+                            sf data query --query "SELECT Name, Subject, Status FROM WorkItem" --target-org fy27data360demots
+                        </code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
