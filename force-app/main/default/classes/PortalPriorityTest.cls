@@ -199,7 +199,7 @@ private class PortalPriorityTest {
         // Act
         Test.startTest();
         AggregateResult[] results = [
-            SELECT Portal_Priority__c priority, COUNT(Id) count
+            SELECT Portal_Priority__c priority, COUNT(Id) cnt
             FROM Case
             WHERE Id IN :testCases
             GROUP BY Portal_Priority__c
@@ -210,6 +210,6 @@ private class PortalPriorityTest {
         // Assert
         System.assertEquals(4, results.size(), 'Should have 4 different priority groups');
         System.assertEquals('Critical', results[0].get('priority'), 'Critical should have highest count');
-        System.assertEquals(2, results[0].get('count'), 'Critical should have 2 cases');
+        System.assertEquals(2, results[0].get('cnt'), 'Critical should have 2 cases');
     }
 }
