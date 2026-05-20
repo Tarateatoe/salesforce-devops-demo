@@ -1,31 +1,20 @@
 <template>
-    <lightning-card title="Knowledge Base" icon-name="standard:knowledge">
+    <lightning-card title="Knowledge Base Search" icon-name="standard:knowledge">
         <div class="slds-p-around_medium">
-            <lightning-input
-                type="search"
-                label="Search Knowledge Base"
+            <lightning-input 
+                label="Search Knowledge Base" 
                 value={searchTerm}
-                onchange={handleSearchChange}>
+                onchange={handleSearchChange}
+                placeholder="Search for articles...">
             </lightning-input>
-
-            <lightning-button
-                label="Search"
-                variant="brand"
+            <lightning-button 
+                variant="brand" 
+                label="Search" 
                 onclick={handleSearch}
                 class="slds-m-top_small">
             </lightning-button>
-
             <template if:true={isLoading}>
-                <lightning-spinner
-                    alternative-text="Loading"
-                    size="small">
-                </lightning-spinner>
-            </template>
-
-            <template if:true={hasArticles}>
-                <div class="slds-m-top_medium">
-                    <!-- Article results will be displayed here -->
-                </div>
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
             </template>
         </div>
     </lightning-card>

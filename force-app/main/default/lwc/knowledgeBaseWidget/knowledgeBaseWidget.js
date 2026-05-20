@@ -1,13 +1,9 @@
-import { LightningElement, api, wire } from 'lwc';
-import { getRecord } from 'lightning/uiRecordApi';
+import { LightningElement, track } from 'lwc';
 
 export default class KnowledgeBaseWidget extends LightningElement {
-    @api recordId;
-    @api objectApiName;
-
-    searchTerm = '';
-    articles = [];
-    isLoading = false;
+    @track searchTerm = '';
+    @track articles = [];
+    @track isLoading = false;
 
     handleSearchChange(event) {
         this.searchTerm = event.target.value;
@@ -15,12 +11,11 @@ export default class KnowledgeBaseWidget extends LightningElement {
 
     handleSearch() {
         this.isLoading = true;
-        // Search logic will be implemented with Knowledge API
-        console.log('Searching for:', this.searchTerm);
-        this.isLoading = false;
-    }
-
-    get hasArticles() {
-        return this.articles && this.articles.length > 0;
+        // TODO: Implement AI-powered knowledge base search
+        // This will integrate with Knowledge Articles and provide
+        // AI-powered recommendations based on search context
+        setTimeout(() => {
+            this.isLoading = false;
+        }, 1000);
     }
 }
