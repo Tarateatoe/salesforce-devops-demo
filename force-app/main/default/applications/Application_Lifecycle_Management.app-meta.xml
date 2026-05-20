@@ -12,7 +12,6 @@
     <label>Application Lifecycle Management (ALM)</label>
     <navType>Standard</navType>
     <tabs>standard-home</tabs>
-    <tabs>ALM_Documentation</tabs>
     <tabs>standard-ApexTestResult</tabs>
     <tabs>standard-ApexClass</tabs>
     <tabs>standard-LightningComponentBundle</tabs>
